@@ -1,6 +1,6 @@
 import {
   ChatBubbleOutlineOutlined,
-  FavoriteBorderOutlines,
+  FavoriteBorderOutlined,
   FavoriteOutlined,
   ShareOutlined,
 } from "@mui/icons-material";
@@ -8,14 +8,9 @@ import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "../../components/FlexBetween";
 import Friend from "../../components/Friend";
 import WidgetWrapper from "../../components/WidgetWrapper";
-import { useState } from "../../state";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "../../state";
-
-likes = {
-  userId1: true,
-  userId2: true,
-};
 
 const PostWidget = ({
   postId,
@@ -33,7 +28,7 @@ const PostWidget = ({
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
   const isLiked = Boolean(likes[loggedInUserId]);
-  const likeCount = object.keys(likes).length;
+  const likeCount = Object.keys(likes).length;
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
@@ -43,13 +38,13 @@ const PostWidget = ({
     const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
-        Autorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ userId: loggedInUserId }),
     });
-    const updatePost = await response.json();
-    dispatch(setPost({ post: updatePost }));
+    const updatedPost = await response.json();
+    dispatch(setPost({ post: updatedPost }));
   };
 
   return (
@@ -65,7 +60,7 @@ const PostWidget = ({
       </Typography>
       {picturePath && (
         <img
-          widht="100%"
+          width="100%"
           height="auto"
           alt="post"
           style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
@@ -79,7 +74,7 @@ const PostWidget = ({
               {isLiked ? (
                 <FavoriteOutlined sx={{ color: primary }} />
               ) : (
-                <FavoriteBorderOutlines />
+                <FavoriteBorderOutlined />
               )}
             </IconButton>
             <Typography>{likeCount}</Typography>
@@ -97,13 +92,12 @@ const PostWidget = ({
           <ShareOutlined />
         </IconButton>
       </FlexBetween>
-
       {isComments && (
         <Box mt="0.5rem">
           {comments.map((comment, i) => (
             <Box key={`${name}-${i}`}>
               <Divider />
-              <Typography sx={{ color: main, m: '0.5rem 0', pl: '1rem'}} >
+              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
                 {comment}
               </Typography>
             </Box>
@@ -114,3 +108,5 @@ const PostWidget = ({
     </WidgetWrapper>
   );
 };
+
+export default PostWidget;

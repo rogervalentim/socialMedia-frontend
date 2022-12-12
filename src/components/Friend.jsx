@@ -11,7 +11,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const navigate = useNavigate();
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
-  const friends = useSelector((state) => state.friends);
+  const friends = useSelector((state) => state.user.friends);
 
   const { palette } = useTheme();
   const primaryLight = palette.primary.light;
@@ -27,12 +27,12 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
       {
         method: "PATCH",
         headers: {
-          Autorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       }
     );
-    const data = response.json();
+    const data = await response.json();
     dispatch(setFriends({ friends: data }));
   };
 
@@ -53,7 +53,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
             sx={{
               "&:hover": {
                 color: palette.primary.light,
-                cusor: "pointer",
+                cursor: "pointer",
               },
             }}
           >
@@ -64,9 +64,8 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
           </Typography>
         </Box>
       </FlexBetween>
-
       <IconButton
-        onClick={() => pathFriend()}
+        onClick={() => patchFriend()}
         sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
       >
         {isFriend ? (
@@ -78,3 +77,5 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
     </FlexBetween>
   );
 };
+
+export default Friend;
